@@ -1,10 +1,17 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 
+const root = path.dirname(fileURLToPath(import.meta.url));
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
-const entryFile = path.join(process.cwd(), "entry.png");
+const entryFile = path.join(root, "entry.png");
 const outFile = path.join(outDir, "entry.png");
 
+if (!fs.existsSync(entryFile)) {
+  throw new Error(
+    `entry.png not found next to the program (looked in ${root})`
+  );
+}
 const data = fs.readFileSync(entryFile);
 if (data.length === 0) {
   throw new Error("entry.png is empty");
